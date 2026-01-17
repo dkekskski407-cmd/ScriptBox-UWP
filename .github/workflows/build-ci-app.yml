@@ -1,0 +1,32 @@
+name: Build CI App
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - "ci-app/**"
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Decode PFX
+      shell: powershell
+      run: |
+        echo "${{ secrets.PFX_BASE64 }}" > cert.b64
+        certutil -decode cert.b64 app.pfx
+
+    - name: Setup MSBuild
+      uses: microsoft/setup-msbuild@v2
+
+    - name: Build (placeholder)
+      run: echo "CI pronto. Projeto será adicionado."
+
+    - name: Upload marker
+      uses: actions/upload-artifact@v4
+      with:
+        name: CI-READY
+        path: ci-app/README.md
